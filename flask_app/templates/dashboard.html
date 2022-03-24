@@ -13,7 +13,23 @@
 	</head>
 	<body>
 		<div class="container">
-			<h1>Welcome back, {{current_user.first_name}}</h1>
+			{% with messages = get_flashed_messages() %}
+				{% if messages %}
+						<h2 class="text-center">Error:</h2>
+						<ul class=" pt-1 pb-1 shadow border border-2 border-dark bg-danger d-flex text-start justify-content-center flex-wrap">
+						{% for message in messages %}
+							<li class="text-white mx-3">{{message}}</li>
+						{% endfor %}
+						</ul>
+					</div>
+					<hr>
+				{% else %}
+					<div class="container p-5"></div>
+				{% endif %}
+			{% endwith %}
+		</div>
+		<div class="container">
+			<h1>Welcome back {{current_user.first_name}}</h1>
 		</div>
 		<div class="container">
 			<table class="table">

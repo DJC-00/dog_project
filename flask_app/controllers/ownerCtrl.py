@@ -4,6 +4,16 @@ from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt(app)
 from flask_app.models.dog import Dog
 from flask_app.models.owner import Owner
+from functools import wraps
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not "owner_id" in session:
+            flash("Access Denied: Login Required")
+            return redirect('/')
+        return f(*args, **kwargs)
+    return decorated_function
 
 @app.route('/')
 def login_registration_page():
@@ -42,11 +52,11 @@ def owner_register():
     return redirect ('/dashboard')
 
 @app.route('/dashboard')
+@login_required
 def home():
-    if "owner_id" not in session:
-        flash("Please login or register before entering site!")
-        error = "error"
-        return render_template("index.html", error = error)
+    # if "owner_id" not in session:
+    #     flash("Please login or register before entering site!")
+    #     return redirect("/")
     query_data = {
         'id' : session["owner_id"]
     }
